@@ -1,0 +1,14 @@
+<html><head><title>ws test</title></head><body>
+<pre id="out">running...</pre>
+<script>
+const p = new URLSearchParams(location.search);
+const ticket = p.get('t'); const va = p.get('agent');
+const out = document.getElementById('out');
+const ws = new WebSocket('wss://api-staging-us.callab.dev/echo-v4/voice/web?agent_id=' + va + '&auth_token=' + ticket);
+const log = (s) => { out.textContent += s + '\n'; window.__wsLog = (window.__wsLog||'') + s + '\n'; };
+ws.onopen = () => log('OPENED');
+ws.onerror = () => log('ERROR');
+ws.onclose = (e) => log('CLOSE code=' + e.code + ' reason=' + e.reason);
+ws.onmessage = (m) => log('MSG: ' + String(m.data).slice(0,300));
+setTimeout(() => log('DONE ' + location.origin), 8000);
+</script></body></html>
